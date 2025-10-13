@@ -1,0 +1,27 @@
+# OS files
+Thumbs.db
+Desktop.ini
+.DS_Store
+ehthumbs.db
+
+# OneDrive / temporary files
+~$*
+*.tmp
+
+# IDEs / editors
+.vscode/
+*.code-workspace
+
+# Python cache (if any)
+__pycache__/
+*.py[cod]
+
+# Environment / credentials
+.env
+credentials.json
+
+# Windows thumbnail cache
+Thumbs.db
+
+# Ignore node_modules if present
+node_modules/
