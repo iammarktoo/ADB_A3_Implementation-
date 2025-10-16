@@ -19,7 +19,8 @@ Functions used to resolve the data quality issues include:
 CREATE OR REPLACE TABLE KOALA_DB.silver.Customer AS
 SELECT
     cusID,
-    INITCAP(TRIM(cusName)) AS cusName,
+    INITCAP(TRIM(SPLIT_PART(cusName, ' ', 1))) AS cusFname,
+    INITCAP(TRIM(SPLIT_PART(cusName, ' ', 2))) AS cusLname,
     COALESCE(TRIM(cusAddress), 'Unknown Address') AS cusAddress
 FROM
     (
@@ -36,7 +37,8 @@ FROM
 WHERE
     rn = 1 -- remove duplicates
     AND cusID IS NOT NULL
-    AND cusName NOT IN ('N/A', ''); -- remove invalid names
+    AND cusFname NOT IN ('N/A', '')
+    AND cusLname NOT IN ('N/A', ''); -- remove invalid names
 
 SELECT * FROM KOALA_DB.silver.Customer;
 
@@ -44,7 +46,8 @@ SELECT * FROM KOALA_DB.silver.Customer;
 CREATE OR REPLACE TABLE KOALA_DB.silver.Driver AS
 SELECT
     driID,
-    INITCAP(TRIM(driName)) AS driName,
+    INITCAP(TRIM(SPLIT_PART(driName, ' ', 1))) AS driFname,
+    INITCAP(TRIM(SPLIT_PART(driName, ' ', 2))) AS driLname,
     COALESCE(UPPER(TRIM(driVehicle_type)), 'Unknown') AS driVehicle_type,
     COALESCE(driAvg_rating, 0) AS driAvg_rating,
     driShift_start,

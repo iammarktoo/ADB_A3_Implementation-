@@ -40,14 +40,15 @@ ORDER BY avg_delay_minutes DESC;
 --2. Average Delivery Duration by Driver: Bar Chart
 --Use case: Driver Allocation Optimisation, Arrival Estimation
 SELECT
-    d.driver_name,
+    d.driver_first_name,
+    d.driver_last_name,
     AVG(DATEDIFF(minute, f.pickup_time, f.delivery_time)) AS avg_delivery_duration,
     COUNT(*) AS total_orders
 FROM
     KOALA_DB.gold.fact_Delivery f
     JOIN KOALA_DB.gold.dim_Driver d ON f.driver_key = d.driver_key
 GROUP BY
-    d.driver_name
+    d.driver_first_name, d.driver_last_name
 ORDER BY
     avg_delivery_duration DESC;
     
@@ -76,6 +77,7 @@ HAVING ROUND(f.distance_km, 1) <> 0
 AND ROUND(f.distance_km, 1) IS NOT NULL
 ORDER BY distance_group;
     
+    
 --5. Delay Distribution by Time of Day: Line Chart
 --Use case: Time estimation, Driver allocation, 
 WITH prep_time_per_restaurant AS (
@@ -100,7 +102,7 @@ GROUP BY order_hour
 HAVING DATE_PART(hour, f.order_time) IS NOT NULL
 ORDER BY order_hour;
 
---6. Delay by Region / Suburb: Bar Chart
+--5. Delay by Region / Suburb: Bar Chart
 --Use case: Time estimation, Driver allocation
 WITH suburbs AS (
     SELECT
@@ -131,7 +133,7 @@ GROUP BY s.suburb
 ORDER BY avg_delay_minutes DESC;
 
 
---7. Relationship between delay and rating by customer: Scatter Chart
+--6. Relationship between delay and rating by customer: Scatter Chart
 --Use case: Business Knowledge
 WITH prep_time_per_restaurant AS (
         SELECT
@@ -154,14 +156,3 @@ WHERE
     f.rating <> 0
 ORDER BY
     delay_minutes DESC;
-
-
-
-
-
-/*
-Optimised delivery driver allocation
-Accurate arrival time estimation
-Restaurant performance optimisation
-Enhance customer insights
-*/

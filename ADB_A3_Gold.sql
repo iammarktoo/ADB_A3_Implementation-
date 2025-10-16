@@ -22,7 +22,8 @@ Create OR REPLACE TABLE KOALA_DB.gold.dim_Customer AS
 SELECT
     ABS(HASH(cusID)) AS customer_key, --surrogate key
     cusID,
-    cusName AS customer_name,
+    cusFname AS customer_first_name,
+    cusLname AS customer_last_name,
     cusAddress AS customer_address
 FROM
     KOALA_DB.silver.Customer;
@@ -34,7 +35,8 @@ CREATE OR REPLACE TABLE KOALA_DB.gold.dim_Driver AS
 SELECT
     ABS(HASH(driID)) AS driver_key,
     driID,
-    driName AS driver_name,
+    driFname AS driver_first_name,
+    driLname AS driver_last_name,
     driVehicle_type AS vehicle_type,
     driAvg_rating AS avg_rating,
     driShift_start AS shift_start,
