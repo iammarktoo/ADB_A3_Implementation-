@@ -40,15 +40,14 @@ ORDER BY avg_delay_minutes DESC;
 --2. Average Delivery Duration by Driver: Bar Chart
 --Use case: Driver Allocation Optimisation, Arrival Estimation
 SELECT
-    d.driver_first_name,
-    d.driver_last_name,
+    CONCAT(d.driver_first_name, ' ',d.driver_last_name) AS driver_full_name,
     AVG(DATEDIFF(minute, f.pickup_time, f.delivery_time)) AS avg_delivery_duration,
     COUNT(*) AS total_orders
 FROM
     KOALA_DB.gold.fact_Delivery f
     JOIN KOALA_DB.gold.dim_Driver d ON f.driver_key = d.driver_key
 GROUP BY
-    d.driver_first_name, d.driver_last_name
+    driver_full_name
 ORDER BY
     avg_delivery_duration DESC;
     
