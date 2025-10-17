@@ -66,6 +66,7 @@ SELECT * FROM KOALA_DB.gold.dim_Restaurant;
 --FACT_ORDERS
 CREATE OR REPLACE TABLE KOALA_DB.gold.fact_Delivery AS
 SELECT
+    ABS(HASH(delID)) AS delivery_key,
     dl.delID,
     c.customer_key,
     r.restaurant_key,
@@ -82,6 +83,9 @@ FROM
     LEFT JOIN KOALA_DB.gold.dim_Driver d ON dl.driID = d.driID
     LEFT JOIN KOALA_DB.gold.dim_Restaurant r ON dl.resID = r.resID;
     
+ALTER TABLE KOALA_DB.gold.fact_Delivery
+ADD PRIMARY KEY (delivery_key);
+
 ALTER TABLE KOALA_DB.gold.dim_Customer
 ADD PRIMARY KEY (customer_key);
 
