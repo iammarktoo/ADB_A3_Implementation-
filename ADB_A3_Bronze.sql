@@ -175,3 +175,62 @@ VALUES
     ('C018', 'Helen Ma', '65 George St, The Rocks'),
     ('C019', 'N/A', NULL); -- Invalid name and missing address
 SELECT * FROM KOALA_DB.bronze.Customer;
+
+--Total missing values per table (Bronze Layer)
+SELECT 
+    'Delivery' AS table_name,
+    (
+        SUM(CASE WHEN delID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN cusID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN resID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN driID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delOrder_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delPickup_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delDelivery_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delDistance_km IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delStatus IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delRating IS NULL THEN 1 ELSE 0 END)
+    ) AS total_nulls
+FROM KOALA_DB.bronze.Delivery
+
+UNION ALL
+
+SELECT
+    'Driver' AS table_name,
+    (
+        SUM (CASE WHEN driID IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driName IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driVehicle_type IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driAvg_rating IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driShift_start IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driShift_end IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driCurrent_status IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driLongitude IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driLatitude IS NULL THEN 1 ELSE 0 END)
+        
+    ) AS total_nulls
+FROM KOALA_DB.bronze.Driver
+
+UNION ALL
+
+SELECT 
+  'Restaurant' AS table_name,
+  (
+    SUM(CASE WHEN resID IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resName IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resAddress IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resCurrent_queue IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resCuisine_type IS NULL THEN 1 ELSE 0 END)
+  ) AS total_nulls
+FROM KOALA_DB.bronze.Restaurant
+
+UNION ALL
+
+SELECT 
+  'Customer' AS table_name,
+  (
+    SUM(CASE WHEN cusID IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN cusName  IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN cusAddress  IS NULL THEN 1 ELSE 0 END)
+  ) AS total_nulls
+FROM KOALA_DB.bronze.Customer;

@@ -1,6 +1,5 @@
 USE ROLE TRAINING_ROLE;
 USE WAREHOUSE KOALA_WH;
-
 -- Create schemas for each layer (bronze, silver, gold)
 CREATE SCHEMA IF NOT EXISTS KOALA_DB.silver;
 
@@ -133,6 +132,9 @@ WHERE rn = 1
     AND delPickup_time IS NOT NULL
     AND delDelivery_time IS NOT NULL;
 
+ALTER TABLE KOALA_DB.silver.Delivery
+ADD PRIMARY KEY (delID);
+
 ALTER TABLE KOALA_DB.silver.Customer
 ADD PRIMARY KEY (cusID);
 
@@ -163,9 +165,63 @@ WHERE
     dr.driID IS NULL;
     
 --Check of NULLs after cleaning (should be 0)
-SELECT COUNT(*) AS null_counts
+--Total missing values per table (Silver Layer)
+SELECT 
+    'Delivery' AS table_name,
+    (
+        SUM(CASE WHEN delID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN cusID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN resID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN driID IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delOrder_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delPickup_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delDelivery_time IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delDistance_km IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delStatus IS NULL THEN 1 ELSE 0 END)+
+        SUM(CASE WHEN delRating IS NULL THEN 1 ELSE 0 END)
+    ) AS total_nulls
 FROM KOALA_DB.silver.Delivery
-WHERE delID IS NULL
-    OR cusID IS NULL
-    OR resID IS NULL
-    OR driID IS NULL;
+
+UNION ALL
+
+SELECT
+    'Driver' AS table_name,
+    (
+        SUM (CASE WHEN driID IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driFname IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driLname IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driVehicle_type IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driAvg_rating IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driShift_start IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driShift_end IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driCurrent_status IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driLongitude IS NULL THEN 1 ELSE 0 END)+
+        SUM (CASE WHEN driLatitude IS NULL THEN 1 ELSE 0 END)
+        
+    ) AS total_nulls
+FROM KOALA_DB.silver.Driver
+
+UNION ALL
+
+SELECT 
+  'Restaurant' AS table_name,
+  (
+    SUM(CASE WHEN resID IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resName IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resAddress IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resCurrent_queue IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN resCuisine_type IS NULL THEN 1 ELSE 0 END)
+  ) AS total_nulls
+FROM KOALA_DB.silver.Restaurant
+
+UNION ALL
+
+SELECT 
+  'Customer' AS table_name,
+  (
+    SUM(CASE WHEN cusID IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN cusFname  IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN cusLname  IS NULL THEN 1 ELSE 0 END)+
+    SUM(CASE WHEN cusAddress  IS NULL THEN 1 ELSE 0 END)
+  ) AS total_nulls
+FROM KOALA_DB.silver.Customer;
