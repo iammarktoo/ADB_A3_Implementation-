@@ -16,7 +16,7 @@ Additionally, the bronze layer does not enforce referential integrity.
 Since completeness is the main goal of this layer, enforcing
 referential integrity at such an early stage may result in ingestion
 failures and delay the pipeline. Instead, referential integrity was enforced
-in the gold layer, once the data is standardised.
+in the silver and gold layer, once the data is standardised.
 */
 
 CREATE

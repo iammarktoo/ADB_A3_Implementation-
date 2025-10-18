@@ -12,6 +12,8 @@ Functions used to resolve the data quality issues include:
 - IINITCAP() was used to capitalise the first letter of each word.
 - UPPER() was used to capitalise every letter of a string
 - TRY_TO_DECIMAL() was used to convert longitude and latitude to decimal/return NULL if format is invalid.
+- SPLIT_PART() was used to normalise driver and customer name into first name and last name. 
+- ADD PRIMARY KEY() and ADD FOREIGN KEY () was used to enforce referencial integrity. 
 */
 
 --silver.customers
